@@ -1,0 +1,15 @@
+<h2>📝 Turnos del evento: {{ eventoId }}</h2>
+
+<ul *ngIf="turnos.length > 0; else sinTurnos">
+  <li *ngFor="let turno of turnos">
+    👤 Usuario ID: {{ turno.usuarioId }} |
+    📅 Fecha: {{ turno.fechaSolicitud?.toDate ? turno.fechaSolicitud.toDate() : turno.fechaSolicitud | date:'short' }}
+  </li>
+</ul>
+
+<ng-template #sinTurnos>
+  <p>No hay turnos registrados para este evento.</p>
+</ng-template>
+
+<br>
+<a routerLink="/admin">🔙 Volver al panel</a>

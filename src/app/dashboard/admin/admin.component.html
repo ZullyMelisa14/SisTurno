@@ -1,0 +1,36 @@
+<h2>📅 Crear nuevo evento</h2>
+<button (click)="cerrarSesion()" style="float: right;">🔒 Cerrar sesión</button>
+
+<div>
+  <label>Nombre del evento:</label><br>
+  <input [(ngModel)]="nombreEvento" placeholder="Ej: Jornada médica" />
+</div>
+
+<div>
+  <label>Fecha del evento:</label><br>
+  <input type="date" [(ngModel)]="fechaEvento" />
+</div>
+
+<br>
+<button (click)="crearEvento()">Crear Evento</button>
+
+<hr>
+
+<h3>📄 Mis eventos creados</h3>
+
+<ul *ngIf="eventos.length > 0; else noEventos">
+  <li *ngFor="let evento of eventos">
+    <div>
+      🗓️ {{ evento.nombre }} - {{ evento.fecha?.toDate ? evento.fecha.toDate() : evento.fecha | date:'fullDate' }}
+    </div>
+    <div>
+      <button (click)="editarEvento(evento)">✏️</button>
+      <button (click)="eliminarEvento(evento.id)">🗑️</button>
+      <a [routerLink]="['/admin/eventos', evento.id, 'turnos']">👁️ Ver turnos</a>
+    </div>
+  </li>
+</ul>
+
+<ng-template #noEventos>
+  <p>No hay eventos creados todavía.</p>
+</ng-template>

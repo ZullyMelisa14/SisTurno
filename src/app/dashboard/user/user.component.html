@@ -1,0 +1,34 @@
+<h2>📅 Eventos disponibles</h2>
+<button (click)="cerrarSesion()" style="float: right;">🔒 Cerrar sesión</button>
+<ul *ngIf="eventos.length > 0; else noEventos">
+  <li *ngFor="let evento of eventos">
+    🗓️ {{ evento.nombre }} - {{ evento.fecha?.toDate ? evento.fecha.toDate() : evento.fecha | date:'fullDate' }}
+    <button (click)="solicitarTurno(evento.id)">Solicitar turno</button>
+  </li>
+</ul>
+
+<ng-template #noEventos>
+  <p>No hay eventos disponibles en este momento.</p>
+</ng-template>
+
+<hr>
+
+<!-- Mostrar el QR si se generó un turno -->
+<div *ngIf="turnoGenerado">
+  <h3>🎟️ Tu boleto digital</h3>
+  <p><strong>ID del turno:</strong> {{ turnoGenerado.id }}</p>
+  <qrcode [qrdata]="turnoGenerado.id" [width]="200" [errorCorrectionLevel]="'M'"></qrcode>
+  <p>Guarda este QR o muéstralo el día del evento.</p>
+</div>
+<button (click)="descargarQR()">📥 Descargar QR</button>
+<hr>
+<h3>📋 Todos tus turnos</h3>
+<ul *ngIf="turnosUsuario.length > 0; else noTurnos">
+  <li *ngFor="let turno of turnosUsuario">
+    🎫 Evento ID: {{ turno.eventoId }} - Fecha: {{ turno.fechaSolicitud?.toDate ? turno.fechaSolicitud.toDate() : turno.fechaSolicitud | date:'short' }}
+  </li>
+</ul>
+
+<ng-template #noTurnos>
+  <p>No has solicitado turnos aún.</p>
+</ng-template>

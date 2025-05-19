@@ -1,0 +1,18 @@
+<h2>📷 Escáner de Turnos</h2>
+
+<zxing-scanner
+  [device]="undefined"
+  (scanSuccess)="onCodeResult($event)">
+</zxing-scanner>
+
+<div *ngIf="turnoValido === true">
+  <h3>✅ Turno válido</h3>
+  <p><strong>Evento ID:</strong> {{ datosTurno?.eventoId }}</p>
+  <p><strong>Usuario ID:</strong> {{ datosTurno?.usuarioId }}</p>
+  <p><strong>Fecha de solicitud:</strong> {{ datosTurno?.fechaSolicitud?.toDate() | date:'short' }}</p>
+</div>
+
+<div *ngIf="turnoValido === false">
+  <h3>❌ Turno no válido</h3>
+  <p>El código QR escaneado no corresponde a ningún turno registrado.</p>
+</div>
