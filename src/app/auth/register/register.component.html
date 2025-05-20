@@ -1,15 +1,29 @@
-<h2>🧾 Crear nueva cuenta</h2>
+<div class="container mt-5">
+  <!-- Título de la página -->
+  <h2 class="text-center mb-4">🧾 Crear nueva cuenta</h2>
 
-<div>
-  <label>Correo:</label><br>
-  <input type="email" [(ngModel)]="email" />
+  <!-- Formulario de creación de cuenta -->
+  <div class="card p-4">
+    <form (ngSubmit)="register()">
+      <!-- Campo de correo -->
+      <div class="mb-3">
+        <label for="email" class="form-label">Correo</label>
+        <input type="email" id="email" [(ngModel)]="email" name="email" class="form-control" placeholder="Correo electrónico" required />
+      </div>
+
+      <!-- Campo de contraseña -->
+      <div class="mb-3">
+        <label for="password" class="form-label">Contraseña</label>
+        <input type="password" id="password" [(ngModel)]="password" name="password" class="form-control" placeholder="Contraseña" required />
+      </div>
+
+      <!-- Botón para registrar -->
+      <button type="submit" class="btn btn-primary w-100">Registrar</button>
+    </form>
+  </div>
+
+  <!-- Enlace para volver al inicio de sesión -->
+  <p class="text-center mt-3">
+    ¿Ya tienes una cuenta? <a routerLink="/login">Volver al inicio de sesión</a>
+  </p>
 </div>
-
-<div>
-  <label>Contraseña:</label><br>
-  <input type="password" [(ngModel)]="password" />
-</div>
-
-<br>
-<button (click)="register()">Registrar</button>
-<p><a routerLink="/login">Volver al inicio de sesión</a></p>

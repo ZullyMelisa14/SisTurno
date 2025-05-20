@@ -14,13 +14,10 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'admin', component: AdminComponent },
   { path: 'admin/usuarios', component: GestionUsuariosComponent },
-  { path: '**', redirectTo: 'login' },
-  { path: 'user', component: UserComponent },
-  { path: '**', redirectTo: 'login' },
   { path: 'admin/scan', component: QrScannerComponent },
   { path: 'admin/eventos/:id/turnos', component: TurnosEventoComponent },
-  { path: 'register', component: RegisterComponent },
-  
+  { path: 'user', component: UserComponent },
+  { path: '**', redirectTo: 'login' }
 ];
 
 @NgModule({
