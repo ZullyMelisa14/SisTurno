@@ -1,0 +1,20 @@
+<h2>👥 Gestión de usuarios</h2>
+
+<table>
+  <tr>
+    <th>Correo</th>
+    <th>Rol actual</th>
+    <th>Cambiar a...</th>
+  </tr>
+  <tr *ngFor="let usuario of usuarios">
+    <td>{{ usuario.email }}</td>
+    <td>{{ usuario.role }}</td>
+    <td>
+      <button *ngIf="usuario.role !== 'admin'" (click)="cambiarRol(usuario, 'admin')">Hacer admin</button>
+      <button *ngIf="usuario.role !== 'usuario'" (click)="cambiarRol(usuario, 'usuario')">Hacer usuario</button>
+    </td>
+  </tr>
+</table>
+
+<br>
+<a routerLink="/admin">🔙 Volver al panel</a>

@@ -1,36 +1,53 @@
-<h2>📅 Crear nuevo evento</h2>
-<button (click)="cerrarSesion()" style="float: right;">🔒 Cerrar sesión</button>
-
-<div>
-  <label>Nombre del evento:</label><br>
-  <input [(ngModel)]="nombreEvento" placeholder="Ej: Jornada médica" />
+<div class="container mt-5">
+  
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>📅 Crear nuevo evento</h2>
+    <a routerLink="/admin/usuarios">
+    <button>👥 Gestionar usuarios</button>
+    </a>
+    <button (click)="cerrarSesion()" class="btn btn-danger">🔒 Cerrar sesión</button>
+    <div style="text-align: right; margin-bottom: 10px;">
+    
 </div>
+  </div>
 
-<div>
-  <label>Fecha del evento:</label><br>
-  <input type="date" [(ngModel)]="fechaEvento" />
+  <div class="card p-4 mb-4">
+    <form (ngSubmit)="crearEvento()">
+      
+      <div class="mb-3">
+        <label for="nombreEvento" class="form-label">Nombre del evento</label>
+        <input type="text" id="nombreEvento" [(ngModel)]="nombreEvento" name="nombreEvento" class="form-control" placeholder="Ej: Jornada médica" required />
+      </div>
+      
+      <div class="mb-3">
+        <label for="fechaEvento" class="form-label">Fecha del evento</label>
+        <input type="date" id="fechaEvento" [(ngModel)]="fechaEvento" name="fechaEvento" class="form-control" required />
+      </div>
+
+      
+      <button type="submit" class="btn btn-primary w-100">Crear Evento</button>
+    </form>
+  </div>
+
+  
+  <h3>📄 Mis eventos creados</h3>
+
+  
+  <ul *ngIf="eventos.length > 0; else noEventos" class="list-group">
+    <li *ngFor="let evento of eventos" class="list-group-item d-flex justify-content-between align-items-center">
+      <div>
+        🗓️ {{ evento.nombre }} - {{ evento.fecha?.toDate ? evento.fecha.toDate() : evento.fecha | date:'fullDate' }}
+      </div>
+      <div>
+        <button (click)="editarEvento(evento)" class="btn btn-warning btn-sm">✏️</button>
+        <button (click)="eliminarEvento(evento.id)" class="btn btn-danger btn-sm ms-2">🗑️</button>
+        <a [routerLink]="['/admin/eventos', evento.id, 'turnos']" class="btn btn-info btn-sm ms-2">👁️ Ver turnos</a>
+      </div>
+    </li>
+  </ul>
+
+  
+  <ng-template #noEventos>
+    <p class="text-muted">No hay eventos creados todavía.</p>
+  </ng-template>
 </div>
-
-<br>
-<button (click)="crearEvento()">Crear Evento</button>
-
-<hr>
-
-<h3>📄 Mis eventos creados</h3>
-
-<ul *ngIf="eventos.length > 0; else noEventos">
-  <li *ngFor="let evento of eventos">
-    <div>
-      🗓️ {{ evento.nombre }} - {{ evento.fecha?.toDate ? evento.fecha.toDate() : evento.fecha | date:'fullDate' }}
-    </div>
-    <div>
-      <button (click)="editarEvento(evento)">✏️</button>
-      <button (click)="eliminarEvento(evento.id)">🗑️</button>
-      <a [routerLink]="['/admin/eventos', evento.id, 'turnos']">👁️ Ver turnos</a>
-    </div>
-  </li>
-</ul>
-
-<ng-template #noEventos>
-  <p>No hay eventos creados todavía.</p>
-</ng-template>

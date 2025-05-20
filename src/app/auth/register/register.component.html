@@ -1,1 +1,15 @@
-<p>register works!</p>
+<h2>🧾 Crear nueva cuenta</h2>
+
+<div>
+  <label>Correo:</label><br>
+  <input type="email" [(ngModel)]="email" />
+</div>
+
+<div>
+  <label>Contraseña:</label><br>
+  <input type="password" [(ngModel)]="password" />
+</div>
+
+<br>
+<button (click)="register()">Registrar</button>
+<p><a routerLink="/login">Volver al inicio de sesión</a></p>

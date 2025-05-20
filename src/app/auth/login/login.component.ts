@@ -14,4 +14,17 @@ export class LoginComponent {
   login() {
     this.authService.login(this.email, this.password);
   }
+
+  recuperarContrasena() {
+  const email = prompt('📧 Ingresa tu correo para recuperar la contraseña:');
+  if (email) {
+    this.authService.enviarCorreoRecuperacion(email);
+  }
+}
+
+
+
+
+
+  
 }

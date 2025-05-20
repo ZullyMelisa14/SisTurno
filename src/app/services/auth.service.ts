@@ -63,4 +63,15 @@ export class AuthService {
   getUsuarioActual() {
     return this.usuarioActual;
   }
+
+  enviarCorreoRecuperacion(email: string) {
+  this.afAuth.sendPasswordResetEmail(email)
+    .then(() => {
+      alert('✅ Se envió un correo de recuperación. Revisa tu bandeja de entrada.');
+    })
+    .catch(err => {
+      alert('❌ Error al enviar correo: ' + err.message);
+    });
+}
+
 }

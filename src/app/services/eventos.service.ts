@@ -1,5 +1,3 @@
-// src/app/services/eventos.service.ts
-
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 
