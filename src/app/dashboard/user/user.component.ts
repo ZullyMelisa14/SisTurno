@@ -10,7 +10,12 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 })
 export class UserComponent implements OnInit {
   eventos: any[] = [];
-  turnoGenerado: any = null; // aquí guardaremos el turno para mostrar su QR
+  turnoGenerado: any = null;
+  turnosUsuario: any[] = [];
+
+  eventoSeleccionado: any = null;
+  nombreUsuario: string = '';
+  cedulaUsuario: string = '';
 
   constructor(
     private eventosService: EventosService,
@@ -19,85 +24,111 @@ export class UserComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-  this.eventosService.obtenerEventos().subscribe(data => {
-    this.eventos = data;
-  });
-
-  const user = this.auth.getUsuarioActual();
-  if (user) {
-    // Verificar si el usuario ya tiene un turno
-    this.afs.collection('turnos', ref =>
-      ref.where('usuarioId', '==', user.uid)
-    ).get().subscribe(snapshot => {
-      if (!snapshot.empty) {
-        const turno = snapshot.docs[0];
-        this.turnoGenerado = {
-          id: turno.id,
-          ...turno.data() as object
-        };
-      }
+    this.eventosService.obtenerEventos().subscribe(data => {
+      this.eventos = data;
     });
-  }
-  this.cargarTurnosDelUsuario();
-}
 
-  solicitarTurno(eventoId: string) {
-  const user = this.auth.getUsuarioActual();
-  const ahora = new Date();
-
-  if (user) {
-    // Verificar si ya tiene turno para este evento
-    this.afs.collection('turnos', ref =>
-      ref.where('usuarioId', '==', user.uid).where('eventoId', '==', eventoId)
-    ).get().subscribe(snapshot => {
-      if (!snapshot.empty) {
-        alert('⚠️ Ya tienes un turno para este evento.');
-      } else {
-        // Si no tiene turno, lo crea
-        this.afs.collection('turnos').add({
-          eventoId,
-          usuarioId: user.uid,
-          fechaSolicitud: ahora
-        }).then(docRef => {
-          alert('✅ Turno solicitado con éxito');
+    const user = this.auth.getUsuarioActual();
+    if (user) {
+      this.afs.collection('turnos', ref =>
+        ref.where('usuarioId', '==', user.uid)
+      ).get().subscribe(snapshot => {
+        if (!snapshot.empty) {
+          const turno = snapshot.docs[0];
           this.turnoGenerado = {
-            id: docRef.id,
-            eventoId,
-            usuarioId: user.uid
+            id: turno.id,
+            ...turno.data() as object
           };
-        });
-      }
-    });
+        }
+      });
+    }
+
+    this.cargarTurnosDelUsuario();
   }
-}
 
-turnosUsuario: any[] = [];
-
-cargarTurnosDelUsuario() {
-  const user = this.auth.getUsuarioActual();
-  if (user) {
-    this.afs.collection('turnos', ref =>
-      ref.where('usuarioId', '==', user.uid)
-    ).valueChanges({ idField: 'id' }).subscribe(data => {
-      this.turnosUsuario = data;
-    });
+  mostrarFormulario(evento: any) {
+    this.eventoSeleccionado = evento;
+    this.nombreUsuario = '';
+    this.cedulaUsuario = '';
   }
-}
 
-descargarQR() {
-  const qrElement = document.querySelector('qrcode canvas') as HTMLCanvasElement;
-  if (qrElement) {
-    const enlace = document.createElement('a');
-    enlace.href = qrElement.toDataURL('image/png');
-    enlace.download = `turno-${this.turnoGenerado.id}.png`;
-    enlace.click();
-  } else {
-    alert('⚠️ No se pudo encontrar el código QR');
+  cancelarFormulario() {
+    this.eventoSeleccionado = null;
+    this.nombreUsuario = '';
+    this.cedulaUsuario = '';
   }
+
+  enviarTurno() {
+    const user = this.auth.getUsuarioActual();
+    const ahora = new Date();
+
+    if (!this.nombreUsuario || !this.cedulaUsuario) {
+      alert('⚠️ Por favor completa todos los campos');
+      return;
+    }
+
+    if (user && this.eventoSeleccionado) {
+      this.afs.collection('turnos', ref =>
+        ref.where('usuarioId', '==', user.uid)
+           .where('eventoId', '==', this.eventoSeleccionado.id)
+      ).get().subscribe(snapshot => {
+        if (!snapshot.empty) {
+          alert('⚠️ Ya tienes un turno para este evento.');
+        } else {
+          this.afs.collection('turnos').add({
+            eventoId: this.eventoSeleccionado.id,
+            usuarioId: user.uid,
+            nombre: this.nombreUsuario,
+            cedula: this.cedulaUsuario,
+            fechaSolicitud: ahora
+          }).then(docRef => {
+            alert('✅ Turno solicitado con éxito');
+            this.turnoGenerado = {
+              id: docRef.id,
+              eventoId: this.eventoSeleccionado.id,
+              usuarioId: user.uid,
+              nombre: this.nombreUsuario,
+              cedula: this.cedulaUsuario
+            };
+            this.cancelarFormulario();
+            this.cargarTurnosDelUsuario();
+          });
+        }
+      });
+    }
+  }
+
+  cargarTurnosDelUsuario() {
+    const user = this.auth.getUsuarioActual();
+    if (user) {
+      this.afs.collection('turnos', ref =>
+        ref.where('usuarioId', '==', user.uid)
+      ).valueChanges({ idField: 'id' }).subscribe(data => {
+        this.turnosUsuario = data;
+      });
+    }
+  }
+
+  descargarQR() {
+    const qrElement = document.querySelector('qrcode canvas') as HTMLCanvasElement;
+    if (qrElement) {
+      const enlace = document.createElement('a');
+      enlace.href = qrElement.toDataURL('image/png');
+      enlace.download = `turno-${this.turnoGenerado.id}.png`;
+      enlace.click();
+    } else {
+      alert('⚠️ No se pudo encontrar el código QR');
+    }
+  }
+
+  turnoSeleccionado: any = null;
+
+verDetalleTurno(turno: any) {
+  this.turnoSeleccionado = turno;
 }
 
-cerrarSesion() {
-  this.auth.logout();
-}
 
+  cerrarSesion() {
+    this.auth.logout();
+  }
 }

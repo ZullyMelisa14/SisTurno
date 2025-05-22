@@ -10,8 +10,12 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 export class TurnosEventoComponent implements OnInit {
   eventoId: string = '';
   turnos: any[] = [];
+  turnoSeleccionado: any = null;
 
-  constructor(private route: ActivatedRoute, private afs: AngularFirestore) {}
+  constructor(
+    private route: ActivatedRoute,
+    private afs: AngularFirestore
+  ) {}
 
   ngOnInit(): void {
     this.eventoId = this.route.snapshot.paramMap.get('id') || '';
@@ -21,5 +25,9 @@ export class TurnosEventoComponent implements OnInit {
     ).valueChanges({ idField: 'id' }).subscribe(data => {
       this.turnos = data;
     });
+  }
+
+  verDetalleTurno(turno: any) {
+    this.turnoSeleccionado = turno;
   }
 }

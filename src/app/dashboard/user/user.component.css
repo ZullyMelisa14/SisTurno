@@ -1,0 +1,11 @@
+.card {
+  border-radius: 1rem;
+}
+
+.btn {
+  border-radius: 0.5rem;
+}
+
+h2, h4 {
+  letter-spacing: 0.5px;
+}

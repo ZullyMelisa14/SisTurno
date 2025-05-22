@@ -1,0 +1,6 @@
+zxing-scanner {
+  display: block;
+  border: 2px dashed #6c757d;
+  border-radius: 10px;
+  min-height: 300px;
+}
