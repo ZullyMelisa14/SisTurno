@@ -12,10 +12,10 @@ export class UserComponent implements OnInit {
   eventos: any[] = [];
   turnoGenerado: any = null;
   turnosUsuario: any[] = [];
-
   eventoSeleccionado: any = null;
   nombreUsuario: string = '';
   cedulaUsuario: string = '';
+  turnoSeleccionado: any = null;
 
   constructor(
     private eventosService: EventosService,
@@ -121,12 +121,9 @@ export class UserComponent implements OnInit {
     }
   }
 
-  turnoSeleccionado: any = null;
-
-verDetalleTurno(turno: any) {
-  this.turnoSeleccionado = turno;
-}
-
+  verDetalleTurno(turno: any) {
+    this.turnoSeleccionado = turno;
+  }
 
   cerrarSesion() {
     this.auth.logout();

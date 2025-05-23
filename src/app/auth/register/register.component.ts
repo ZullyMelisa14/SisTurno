@@ -4,6 +4,7 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
 
 @Component({
+  standalone: false,
   selector: 'app-register',
   templateUrl: './register.component.html'
 })
