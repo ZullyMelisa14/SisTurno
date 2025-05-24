@@ -98,16 +98,29 @@ export class UserComponent implements OnInit {
     }
   }
 
-  cargarTurnosDelUsuario() {
-    const user = this.auth.getUsuarioActual();
-    if (user) {
-      this.afs.collection('turnos', ref =>
-        ref.where('usuarioId', '==', user.uid)
-      ).valueChanges({ idField: 'id' }).subscribe(data => {
-        this.turnosUsuario = data;
+ cargarTurnosDelUsuario() {
+  const user = this.auth.getUsuarioActual();
+  if (user) {
+    this.afs.collection('turnos', ref =>
+      ref.where('usuarioId', '==', user.uid)
+    ).valueChanges({ idField: 'id' }).subscribe(data => {
+      // Traer los eventos asociados
+      const turnosConEventos = data.map(async (turno: any) => {
+        const eventoSnap = await this.afs.collection('eventos').doc(turno.eventoId).get().toPromise();
+        const eventoData = eventoSnap?.data() as any;
+        return {
+          ...turno,
+          nombreEvento: eventoData && eventoData.nombre ? eventoData.nombre : 'Evento desconocido'
+        };
       });
-    }
+
+      Promise.all(turnosConEventos).then(completados => {
+        this.turnosUsuario = completados;
+      });
+    });
   }
+}
+
 
   descargarQR() {
     const qrElement = document.querySelector('qrcode canvas') as HTMLCanvasElement;

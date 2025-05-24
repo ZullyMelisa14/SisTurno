@@ -6,7 +6,8 @@
     <button *ngFor="let turno of turnos"
             class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
             (click)="verDetalleTurno(turno)">
-      <span>👤 {{ turno.usuarioId }}</span>
+      <span>👤 {{ turno.nombre }}</span>
+      <span>🆔 {{ turno.id }}</span>
       <span class="text-muted">
         {{ turno.fechaSolicitud?.toDate ? turno.fechaSolicitud.toDate() : (turno.fechaSolicitud | date:'short') }}
       </span>

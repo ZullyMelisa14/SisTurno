@@ -43,48 +43,42 @@
   </div>
 
   <hr>
-
-  <!-- Turno generado con QR -->
-  <div *ngIf="turnoGenerado" class="card p-4 mb-4 shadow">
-    <h4 class="mb-3">🎟️ Tu boleto digital</h4>
-    <p><strong>ID del turno:</strong> {{ turnoGenerado.id }}</p>
-    <p><strong>Nombre:</strong> {{ turnoGenerado.nombre }}</p>
-    <p><strong>Cédula:</strong> {{ turnoGenerado.cedula }}</p>
-    <div class="text-center my-3">
-      <qrcode [qrdata]="turnoGenerado.id" [width]="200" [errorCorrectionLevel]="'M'"></qrcode>
-    </div>
-    <p>Guarda este QR o muéstralo el día del evento.</p>
-    <button (click)="descargarQR()" class="btn btn-success">📥 Descargar QR</button>
-  </div>
-
   <hr>
 
-  <!-- Lista de turnos del usuario -->
-  <h4 class="mb-3">📋 Tus turnos anteriores</h4>
-  <div *ngIf="turnosUsuario.length > 0; else noTurnos" class="list-group mb-4">
-    <button *ngFor="let turno of turnosUsuario"
-            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
-            (click)="verDetalleTurno(turno)">
-      <span>🎫 Evento ID: {{ turno.eventoId }}</span>
-      <small class="text-muted">
-        {{ turno.fechaSolicitud?.toDate ? turno.fechaSolicitud.toDate() : (turno.fechaSolicitud | date:'short') }}
-      </small>
-    </button>
-  </div>
+ <!-- Lista de turnos del usuario -->
+<h4 class="mb-3">📋 Tus turnos anteriores</h4>
+<div *ngIf="turnosUsuario.length > 0; else noTurnos" class="list-group mb-4">
+  <button *ngFor="let turno of turnosUsuario"
+          class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+          (click)="verDetalleTurno(turno)">
+    <span>🎫 {{ turno.nombreEvento }}</span>
+    <small class="text-muted">
+      {{ turno.fechaSolicitud?.toDate ? turno.fechaSolicitud.toDate() : (turno.fechaSolicitud | date:'short') }}
+    </small>
+  </button>
+</div>
+
 
   <ng-template #noTurnos>
     <div class="alert alert-secondary mt-3">No has solicitado turnos aún.</div>
   </ng-template>
 
-  <!-- Detalle del turno seleccionado -->
-  <div *ngIf="turnoSeleccionado" class="card border-info shadow-sm p-4 mb-4">
-    <h5 class="text-info fw-bold mb-3">🔍 Detalle del turno</h5>
-    <p><strong>🆔 ID del turno:</strong> {{ turnoSeleccionado.id }}</p>
-    <p><strong>🗓️ Fecha:</strong> {{ turnoSeleccionado.fechaSolicitud?.toDate ? turnoSeleccionado.fechaSolicitud.toDate() : (turnoSeleccionado.fechaSolicitud | date:'full') }}</p>
-    <p><strong>📛 Nombre:</strong> {{ turnoSeleccionado.nombre || 'N/A' }}</p>
-    <p><strong>🪪 Cédula:</strong> {{ turnoSeleccionado.cedula || 'N/A' }}</p>
-    <button (click)="turnoSeleccionado = null" class="btn btn-outline-secondary mt-3">❌ Cerrar detalle</button>
+ <!-- Detalle del turno seleccionado -->
+<div *ngIf="turnoSeleccionado" class="card border-info shadow-sm p-4 mb-4">
+  <h5 class="text-info fw-bold mb-3">🔍 Detalle del turno</h5>
+  <p><strong>🆔 ID del turno:</strong> {{ turnoSeleccionado.id }}</p>
+  <p><strong>🗓️ Fecha:</strong> {{ turnoSeleccionado.fechaSolicitud?.toDate ? turnoSeleccionado.fechaSolicitud.toDate() : (turnoSeleccionado.fechaSolicitud | date:'full') }}</p>
+  <p><strong>📛 Nombre:</strong> {{ turnoSeleccionado.nombre || 'N/A' }}</p>
+  <p><strong>🪪 Cédula:</strong> {{ turnoSeleccionado.cedula || 'N/A' }}</p>
+
+  <!-- 🔽 QR DINÁMICO PARA ESE TURNO -->
+  <div class="text-center my-3">
+    <qrcode [qrdata]="turnoSeleccionado.id" [width]="200" [errorCorrectionLevel]="'M'"></qrcode>
   </div>
+
+  <button (click)="turnoSeleccionado = null" class="btn btn-outline-secondary mt-3">❌ Cerrar detalle</button>
+</div>
+
 
   <ng-template #noTurnos>
     <div class="alert alert-secondary mt-3">No has solicitado turnos aún.</div>
